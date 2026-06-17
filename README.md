@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# SmartLogix — Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Interfaz web de SmartLogix construida con React. Permite a las PYMEs gestionar inventario, crear pedidos, hacer seguimiento de envíos y ver notificaciones del sistema.
 
-## Available Scripts
+## Tecnologías
 
-In the project directory, you can run:
+- React 18
+- React Router (navegación)
+- Axios (consumo de API REST)
+- CSS plano con variables de tema oscuro
 
-### `npm start`
+## Patrones de diseño implementados
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Singleton** — `services/api.js` mantiene una única instancia de Axios configurada con el token JWT para todas las peticiones.
+- **Observer** — `context/AuthContext.js` notifica a todos los componentes suscritos cuando cambia el estado de autenticación del usuario.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requisitos
 
-### `npm test`
+- Node.js 18 o superior
+- npm 9 o superior
+- El backend de SmartLogix corriendo en `http://localhost:8080` (ver repositorio principal para levantar todo con Docker)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Instalación
 
-### `npm run build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Ejecución en modo desarrollo
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+La aplicación se abre automáticamente en `http://localhost:3000`.
 
-### `npm run eject`
+## Construcción para producción
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Genera la carpeta `build/` con los archivos optimizados, listos para servir con Nginx u otro servidor estático.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Estructura del proyecto
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+frontend/
+├── public/              Archivos estáticos (index.html, íconos)
+├── src/
+│   ├── components/      Componentes reutilizables (Navbar, etc.)
+│   ├── context/          AuthContext (Observer Pattern)
+│   ├── pages/            Páginas: Dashboard, Inventario, Pedidos, Envíos, Notificaciones, Perfil
+│   ├── services/         api.js (Singleton Axios)
+│   ├── App.js             Definición de rutas
+│   └── index.js           Punto de entrada
+├── Dockerfile             Build multi-stage con Nginx
+├── nginx.conf             Configuración de Nginx para SPA
+└── package.json
+```
 
-## Learn More
+## Cómo probar la aplicación
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Asegúrate de que el backend esté corriendo (`docker-compose up` en el repositorio principal).
+2. Ejecuta `npm start`.
+3. Regístrate como usuario PYME desde la pantalla de login.
+4. Inicia sesión y navega por Dashboard, Inventario, Pedidos y Envíos para verificar que los datos se cargan correctamente desde la API.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Variables de entorno
 
-### Code Splitting
+La URL del API Gateway está configurada directamente en `src/services/api.js`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```javascript
+const API_URL = 'http://localhost:8080';
+```
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Si el backend corre en otra dirección, modifica esa constante.
